@@ -3,7 +3,7 @@ const express = require("express")
 const app = express()
 
 // Routes
-const authRoute = require("./routes/auth")
+const authRoute = require("./api/user/auth")
 app.use("/v1/api/user", authRoute)
 
 
