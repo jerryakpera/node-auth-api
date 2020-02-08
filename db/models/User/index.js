@@ -30,6 +30,11 @@ const userSchema = new mongoose.Schema({
   date: {
     type: Date,
     default: Date.now
+  },
+  online: {
+    type: Boolean,
+    required: true,
+    default: false
   }
 }, { versionKey: false })
 
