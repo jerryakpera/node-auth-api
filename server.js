@@ -6,6 +6,5 @@ const app = require("./app")
 const db = require("./db/db")
 
 app.listen(config.port, () => {
-
   console.log(`node-auth-api is currently listening on port ${config.port}`)
 })

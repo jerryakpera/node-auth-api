@@ -1,4 +1,4 @@
-// COnfig
+// Config
 const config = require("../config/devconfig.json")
 // Mongoose module
 const mongoose = require('mongoose')
@@ -6,7 +6,8 @@ const mongoose = require('mongoose')
 // Connect to DB with user and authentication
 mongoose.connect(config.dbURL, {
   useNewUrlParser: true,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
+  useCreateIndex: true
 })
 const db = mongoose.connection
 // check for database errors
