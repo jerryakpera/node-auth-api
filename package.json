@@ -1,0 +1,16 @@
+{
+  "name": "auth-module",
+  "version": "0.1.0",
+  "description": "Stand alone auth module",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "node",
+    "jwt",
+    "auth"
+  ],
+  "author": "Jeremiah Akpera",
+  "license": "MIT"
+}
