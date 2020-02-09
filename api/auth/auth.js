@@ -1,11 +1,11 @@
 const router = require("express").Router()
-const USER = require("./userController").User
+const AUTH = require("./authController").User
 
 const {
   validationResult
 } = require('express-validator')
 
-router.post("/register", USER.newUserValidator, (req, res) => {
+router.post("/register", AUTH.newUserValidator, (req, res) => {
   const errors = validationResult(req)
 
   if (!errors.isEmpty()) {
@@ -17,13 +17,14 @@ router.post("/register", USER.newUserValidator, (req, res) => {
     })
   }
 
-  USER.register({
+  AUTH.register({
     email: req.body.email,
     firstname: req.body.firstname,
     lastname: req.body.lastname,
     password: req.body.password
   }).then(user => {
-    return res.json({
+    const token = AUTH.createToken(user.userID)
+    res.header("auth-token", token).json({
       status: 200,
       message: "User registered successfully",
       data: {
@@ -42,7 +43,7 @@ router.post("/register", USER.newUserValidator, (req, res) => {
   })
 })
 
-router.post("/login", USER.loginValidator, (req, res) => {
+router.post("/login", AUTH.loginValidator, (req, res) => {
   const errors = validationResult(req)
 
   if (!errors.isEmpty()) {
@@ -54,7 +55,7 @@ router.post("/login", USER.loginValidator, (req, res) => {
     })
   }
 
-  USER.findByEmail(req.body.email).then(user => {
+  AUTH.findByEmail(req.body.email).then(user => {
     // If no user with that email is found
     if (!user) {
       return res.json({
@@ -65,7 +66,7 @@ router.post("/login", USER.loginValidator, (req, res) => {
     }
 
     // If user is found then update the user online status to true and login the user
-    USER.login({user: req.body, hash: user.hash}).then(status => {
+    AUTH.login({user: req.body, hash: user.hash}).then(status => {
       if (!status) {
         return res.json({
           status: 400,
@@ -73,7 +74,9 @@ router.post("/login", USER.loginValidator, (req, res) => {
           data: {}
         })
       }
-      return res.json({
+
+      const token = AUTH.createToken(user.userID)
+      res.header("auth-token", token).json({
         status: 200,
         message: "User logged in successfully",
         data: {
