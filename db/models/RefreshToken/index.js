@@ -1,28 +1,23 @@
 const mongoose = require("mongoose")
 const uniqueValidator = require('mongoose-unique-validator')
 
-const userSchema = new mongoose.Schema({
+const refreshTokenSchema = new mongoose.Schema({
   userID: {
     type: String,
     required: true,
     unique: true
   },
-  email: {
+  token: {
     type: String,
     required: true,
-    trim: true,
     unique: true,
   },
-  hash: {
-    type: String,
-    required: true
-  },
-  created: {
+  expiresIn: {
     type: Date,
-    default: Date.now
+    required: true
   }
 }, { versionKey: false })
 
-userSchema.plugin(uniqueValidator)
+refreshTokenSchema.plugin(uniqueValidator)
 
-module.exports = mongoose.model("User", userSchema)
+module.exports = mongoose.model("RefreshToken", refreshTokenSchema)

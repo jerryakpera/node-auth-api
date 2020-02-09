@@ -9,7 +9,7 @@ const {
 } = require("express-validator")
 
 module.exports = {
-  User: {
+  Auth: {
     register: (user) => {
       const BCRYPT_SALT_ROUNDS = 12
       return new Promise((resolve, reject) => {
@@ -17,7 +17,6 @@ module.exports = {
           .then(hash => {
             user.userID = _.getID()
             user.hash = hash
-            user.online = true
             const newUser = new User(user)
 
             newUser.save((err, user) => {
@@ -34,11 +33,40 @@ module.exports = {
     },
 
     login: (obj) => {
-      const query = {email: obj.user.email}
-      const update = {online: true}
       return new Promise((resolve, reject) => {
-        User.findOneAndUpdate(query, update, {new: true, useFindAndModify: false}).then(doc => {
-          resolve(bcrypt.compare(obj.user.password, obj.hash))
+        resolve(bcrypt.compare(obj.user.password, obj.hash))
+      })
+    },
+
+    comparePasswords: (password) => {
+      return new Promise((resolve, reject) => {
+        resolve(bcrypt.compare(password.one, password.two))
+      })
+    },
+
+    changePassword: (obj) => {
+      const query = {userID: obj.userID}
+      const BCRYPT_SALT_ROUNDS = 12
+      return new Promise((resolve, reject) => {
+
+        bcrypt.hash(obj.newPassword, BCRYPT_SALT_ROUNDS).then(hash => {
+          User.findOneAndUpdate(query, {hash}, {new: true, useFindAndModify: false}, (err, docs) => {
+            if (err) {
+              reject(err)
+            }
+            resolve(docs)
+          })
+        })
+      })
+    },
+    
+    findByuserID: (userID) => {
+      return new Promise((resolve, reject) => {
+        User.findOne({userID: userID}, (err, doc) => {
+          if (err) {
+            reject(err)
+          }
+          resolve(doc)
         })
       })
     },
@@ -54,11 +82,6 @@ module.exports = {
       })
     },
 
-    createToken: (userID) => {
-      const tokenSecret = config.tokenSecret
-      return jwt.sign({userID}, tokenSecret)
-    },
-
     newUserValidator: [
       // username must be an email
       check("email", "email is not valid").isEmail(),
@@ -72,13 +95,36 @@ module.exports = {
         req
       }) => value === req.body.password)
     ],
-
+    
     loginValidator: [
       check("email", "enter.valid.email").isEmail(),
       check("password", "password must be at least 8 characters").isLength({
         min: 8
       })
     ],
+
+    changePasswordValidator: [
+      // username must be an email
+      check("email", "email is not valid").isEmail(),
+      // password must be at least 5 chars long
+      check("currentPassword", "password must be at least 8 characters").isLength({
+        min: 8
+      }),
+      check("newPassword", "password must be at least 8 characters").isLength({
+        min: 8
+      }),
+      check("confirmNewPassword", "passwords must be the same")
+      .exists()
+      .custom((value, {
+        req
+      }) => value === req.body.newPassword),
+      check("newPassword", "old and new passwords must be different")
+      .exists()
+      .custom((value, {
+        req
+      }) => value !== req.body.currentPassword)
+    ],
+
 
   }
 }
