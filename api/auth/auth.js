@@ -85,7 +85,7 @@ router.post("/login", AUTH.loginValidator, (req, res) => {
       if (!status) {
         return res.json({
           status: 400,
-          message: "Wrong password",
+          message: "Wrong details",
           data: {}
         })
       }
@@ -214,5 +214,100 @@ router.post("/refreshtoken", TOKEN.verify, (req, res) => {
   })
 })
 
+router.post("/editemail", TOKEN.verify, (req, res) => {
+  TOKEN.getID(req.header("access-token")).then(userID => {
+    const query = {
+      userID
+    }
+    
+    AUTH.findByEmail(req.body.oldEmail).then(doc => {
+      if (!doc) {
+        return res.json({
+          status: 400,
+          message: "Wrong details",
+          data: {}
+        })
+      }
+      
+      if (userID != doc.userID) {
+        return res.json({
+          status: 400,
+          message: "Wrong details",
+          data: {}
+        })
+      }
+      AUTH.update(query, {email: req.body.newEmail}).then(user => {
+        res.json({
+          status: 200,
+          message: "User edited",
+          data: {
+            userID: user.userID
+          }
+        })
+      })
+
+    }).catch(err => {
+      return res.json({
+        status: 500,
+        message: err.message,
+        data: {}
+      })
+    })
+  })
+})
+
+router.post("/delete", TOKEN.verify, (req, res) => {
+  TOKEN.getID(req.header("access-token")).then(userID => {
+    const query = {
+      userID
+    }
+    
+    AUTH.findByEmail(req.body.email).then(doc => {
+      if (!doc) {
+        return res.json({
+          status: 400,
+          message: "Wrong details",
+          data: {}
+        })
+      }
+      
+      if (userID != doc.userID) {
+        return res.json({
+          status: 400,
+          message: "Wrong details",
+          data: {}
+        })
+      }
+      AUTH.delete({email: req.body.email}).then(() => {
+        TOKEN.delete({userID}).then(() => {
+          res.json({
+            status: 200,
+            message: "User deleted!",
+            data: {}
+          })
+        }).catch(err => {
+          return res.json({
+            status: 500,
+            message: err.message,
+            data: {}
+          })
+        })
+      }).catch(err => {
+        return res.json({
+          status: 500,
+          message: err.message,
+          data: {}
+        })
+      })
+
+    }).catch(err => {
+      return res.json({
+        status: 500,
+        message: err.message,
+        data: {}
+      })
+    })
+  })
+})
 
 module.exports = router

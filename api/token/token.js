@@ -41,6 +41,7 @@ module.exports = {
     return jwt.verify(token, config.tokenSecret).exp
   },
 
+  // Verify token middleware that ensures that the token userID exists in the DB and that the token is valid
   verify: (req, res, next) => {
     const token = req.header("access-token")
     if (!token) {
@@ -92,6 +93,15 @@ module.exports = {
         } else {
           resolve(false)
         }
+      })
+    })
+  },
+
+  delete: (query) => {
+    return new Promise((resolve, reject) => {
+      RefreshToken.deleteOne(query, (err, docs) => {
+        if (err) reject(err)
+        resolve()
       })
     })
   }

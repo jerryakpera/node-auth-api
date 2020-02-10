@@ -38,6 +38,27 @@ module.exports = {
       })
     },
 
+    delete: (query) => {
+      return new Promise((resolve, reject) => {
+        User.deleteOne(query, (err, docs) => {
+          if (err) reject(err)
+          resolve()
+        })
+      })
+    },
+
+    update: (query, user) => {
+      return new Promise((resolve, reject) => {
+        User.findOneAndUpdate(query, user, {
+          new: true,
+          useFindAndModify: false
+        }, (err, docs) => {
+          if (err) reject(err)
+          resolve(docs)
+        })
+      })
+    },
+
     comparePasswords: (password) => {
       return new Promise((resolve, reject) => {
         resolve(bcrypt.compare(password.one, password.two))
