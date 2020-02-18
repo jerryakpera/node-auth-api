@@ -1,8 +1,10 @@
+// Bring in current env working configurations
+// const currentEnv = require("../../config/env").env
+// const config = require(`../../config/${currentEnv}config.json`)
+
 const User = require("../../db/models/User")
 const _ = require("../../services/util")
 const bcrypt = require("bcryptjs")
-const jwt = require("jsonwebtoken")
-const config = require("../../config/devconfig.json")
 
 const {
   check

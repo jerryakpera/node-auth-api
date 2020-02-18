@@ -1,5 +1,8 @@
+// Get the current wrking environment configurations
+const currentEnv = require("../../config/env").env
+const config = require(`../../config/${currentEnv}config.json`)
+
 const jwt = require("jsonwebtoken")
-const config = require("../../config/devconfig.json")
 const AUTH = require("../auth/authController").Auth
 const RefreshToken = require("../../db/models/RefreshToken")
 const _ = require("../../services/util")

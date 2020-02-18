@@ -1,5 +1,6 @@
 // Config
-const config = require("../config/devconfig.json")
+const currentEnv = require("../config/env").env
+const config = require(`../config/${currentEnv}config.json`)
 // Mongoose module
 const mongoose = require('mongoose')
 

@@ -1,5 +1,6 @@
 // Config
-const config = require("./config/devconfig.json")
+const currentEnv = require("./config/env.js").env
+const config = require(`./config/${currentEnv}config.json`)
 // Bring in app from app.js
 const app = require("./app")
 // DB connection

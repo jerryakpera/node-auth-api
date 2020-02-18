@@ -1,3 +1,7 @@
+// Config
+const currentEnv = require("../../../config/env").env
+const config = require(`../../../config/${currentEnv}config.json`)
+
 const mongoose = require("mongoose")
 const uniqueValidator = require('mongoose-unique-validator')
 
@@ -11,12 +15,14 @@ const refreshTokenSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-  },
-  expiresIn: {
-    type: Date,
-    required: true
   }
-}, { versionKey: false })
+}, {
+  versionKey: false,
+  timestamps: true
+})
+
+const refreshTokenExpiresAfter = config.jwtExpirySeconds + 60
+refreshTokenSchema.index({"createdAt": 1}, {expiresAfterSeconds: refreshTokenExpiresAfter})
 
 refreshTokenSchema.plugin(uniqueValidator)
 

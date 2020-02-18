@@ -2,7 +2,6 @@ const router = require("express").Router()
 const AUTH = require("./authController").Auth
 const TOKEN = require("../token/token")
 
-
 const {
   validationResult
 } = require('express-validator')
@@ -179,8 +178,11 @@ router.post("/changepassword", AUTH.changePasswordValidator, TOKEN.verify, (req,
 router.post("/refreshtoken", TOKEN.verify, (req, res) => {
   TOKEN.getID(req.header("access-token")).then(userID => {
     const refreshtoken = req.body.refreshToken
-  
-    TOKEN.findRefreshToken({userID, refreshtoken}).then(found => {
+
+    TOKEN.findRefreshToken({
+      userID,
+      refreshtoken
+    }).then(found => {
       if (!found) {
         return res.json({
           status: 400,
@@ -188,10 +190,10 @@ router.post("/refreshtoken", TOKEN.verify, (req, res) => {
           data: {}
         })
       }
-  
+
       const token = TOKEN.createToken(userID)
       const expiresIn = TOKEN.getExpiresIn(token)
-  
+
       TOKEN.createRefreshToken(userID).then(refreshToken => {
         res.header("access-token", token).json({
           status: 200,
@@ -214,12 +216,13 @@ router.post("/refreshtoken", TOKEN.verify, (req, res) => {
   })
 })
 
+// Add functionality of sending confirmation email to users email to complete the process of changing email
 router.post("/editemail", TOKEN.verify, (req, res) => {
   TOKEN.getID(req.header("access-token")).then(userID => {
     const query = {
       userID
     }
-    
+
     AUTH.findByEmail(req.body.oldEmail).then(doc => {
       if (!doc) {
         return res.json({
@@ -228,7 +231,7 @@ router.post("/editemail", TOKEN.verify, (req, res) => {
           data: {}
         })
       }
-      
+
       if (userID != doc.userID) {
         return res.json({
           status: 400,
@@ -236,7 +239,9 @@ router.post("/editemail", TOKEN.verify, (req, res) => {
           data: {}
         })
       }
-      AUTH.update(query, {email: req.body.newEmail}).then(user => {
+      AUTH.update(query, {
+        email: req.body.newEmail
+      }).then(user => {
         res.json({
           status: 200,
           message: "User edited",
@@ -261,7 +266,7 @@ router.post("/delete", TOKEN.verify, (req, res) => {
     const query = {
       userID
     }
-    
+
     AUTH.findByEmail(req.body.email).then(doc => {
       if (!doc) {
         return res.json({
@@ -270,7 +275,7 @@ router.post("/delete", TOKEN.verify, (req, res) => {
           data: {}
         })
       }
-      
+
       if (userID != doc.userID) {
         return res.json({
           status: 400,
@@ -278,8 +283,12 @@ router.post("/delete", TOKEN.verify, (req, res) => {
           data: {}
         })
       }
-      AUTH.delete({email: req.body.email}).then(() => {
-        TOKEN.delete({userID}).then(() => {
+      AUTH.delete({
+        email: req.body.email
+      }).then(() => {
+        TOKEN.delete({
+          userID
+        }).then(() => {
           res.json({
             status: 200,
             message: "User deleted!",
@@ -306,6 +315,56 @@ router.post("/delete", TOKEN.verify, (req, res) => {
         message: err.message,
         data: {}
       })
+    })
+  })
+})
+
+router.post("/details", TOKEN.verify, (req, res) => {
+  TOKEN.getID(req.header("access-token")).then(userID => {
+    const query = {
+      userID
+    }
+
+    AUTH.findByEmail(req.body.email).then(doc => {
+      if (!doc) {
+        return res.json({
+          status: 400,
+          message: "Wrong details",
+          data: {}
+        })
+      }
+
+      if (userID != doc.userID) {
+        return res.json({
+          status: 400,
+          message: "Wrong details",
+          data: {}
+        })
+      } else {
+        return res.json({
+          status: 200,
+          message: "User auth details",
+          data: {
+            userID: doc.userID,
+            email: doc.email,
+            created: doc.created
+          }
+        })
+      }
+    }).catch(err => {
+      if (err) {
+        return res.json({
+          status: 500,
+          message: err.message,
+          data: {}
+        })
+      }
+    })
+  }).catch(err => {
+    return res.json({
+      status: 500,
+      message: err.message,
+      data: {}
     })
   })
 })
