@@ -283,6 +283,7 @@ router.post("/delete", TOKEN.verify, (req, res) => {
           data: {}
         })
       }
+
       AUTH.delete({
         email: req.body.email
       }).then(() => {
