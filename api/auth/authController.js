@@ -1,3 +1,5 @@
+
+
 // Bring in current env working configurations
 // const currentEnv = require("../../config/env").env
 // const config = require(`../../config/${currentEnv}config.json`)
@@ -146,8 +148,6 @@ module.exports = {
       .custom((value, {
         req
       }) => value !== req.body.currentPassword)
-    ],
-
-
+    ]
   }
 }
