@@ -110,7 +110,6 @@ describe("/api/v1/auth", () => {
   })
 
 
-
   describe.only("/login", () => {
     // Test for successful user login and token created
     it("/login should log user in and create a token and refresh token", async done => {
