@@ -33,9 +33,9 @@ Currently not accepting contributions
 
 ### Versioning
 va.b.c
-**a: major update**
-**b: minor update**
-**c: bug fix**
+1. **a: major update**
+2. **b: minor update**
+3. **c: bug fix**
 
 ## Authors
 **Jeremiah Akpera**
