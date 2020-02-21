@@ -12,7 +12,7 @@ app.get('/swagger.json', (req, res) => {
   res.send(swaggerSpec)
 })
 // Swagger route
-app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec))
+app.use('/', swaggerUI.serve, swaggerUI.setup(swaggerSpec))
 
 const baseURL = "/api/v1"
 
