@@ -6,6 +6,13 @@ const {
   validationResult
 } = require('express-validator')
 
+router.post("/test", (req, res) => {
+  return res.json({
+    status: "200",
+    message: "It works!",
+    data: {}
+  })
+})
 
 router.post("/register", AUTH.newUserValidator, (req, res) => {
   const errors = validationResult(req)
