@@ -1,0 +1,8 @@
+{
+  "port": 3004,
+  "dbURL": "mongodb://jeremiahakpera:putnam6940@ds333098.mlab.com:33098/jta-auth",
+  "testdbURL": "mongodb://jeremiahakpera:putnam6940@ds333098.mlab.com:33098/jta-auth-test",
+  "tokenSecret": "something.solid",
+  "refreshTokenSecret": "somethingserious",
+  "jwtExpirySeconds": 3600
+}
