@@ -1,8 +1,0 @@
-{
-  "port": 3004,
-  "dbURL": "mongodb://heroku_xn9tdb27:6fkjbfh3fr3c0o5algls5i6ek4@ds131676.mlab.com:31676/heroku_xn9tdb27",
-  "testdbURL": "mongodb://jeremiahakpera:putnam6940@ds333098.mlab.com:33098/jta-auth-test",
-  "tokenSecret": "something.solid",
-  "refreshTokenSecret": "somethingserious",
-  "jwtExpirySeconds": 3600
-}
