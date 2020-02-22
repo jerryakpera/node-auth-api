@@ -14,11 +14,6 @@ app.get('/swagger.json', (req, res) => {
 // Swagger route
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec))
 
-app.use("/", (req, res, next) => {
-  console.log(req.body)
-  next()
-})
-
 const baseURL = "/api/v1"
 
 // Routes

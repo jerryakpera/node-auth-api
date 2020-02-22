@@ -1,1 +1,1 @@
-module.exports.env = "prod"
+module.exports.env = "dev"

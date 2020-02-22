@@ -379,30 +379,4 @@ router.post("/details", TOKEN.verify, (req, res) => {
 })
 
 
-// router.post("/token", (req, res) => {
-//   console.log("Request made!")
-//   res.json({
-//     "error_code": "00",
-//     "error_desc": {
-//       "token": "/49EVWtAjhdbD2nzJecMzw",
-//       "expiry": "2020-02-22T09:54:46.057"
-//     }
-//   })
-// })
-
-// router.post("/submit", (req, res) => {
-//   console.log("Submit request made!")
-//   res.json({
-//     "error_code": "00",
-//     "error_desc": {
-//       "ResponseCode": "0",
-//       "ConversationID": "ws_CO_DMZ_282069133_27032019223530205",
-//       "external_ref_number": "",
-//       "ResponseDesc": "Success.Requestacceptedforprocessing",
-//       "OriginatorConversationID": "B2C-SIT-000005",
-//       "ServiceStatus": "0"
-//     }
-//   })
-// })
-
 module.exports = router
